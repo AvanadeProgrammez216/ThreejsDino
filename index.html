@@ -35,32 +35,46 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
                 
-				//SPRITE INIT
+				//TEXTURES INIT
 				var dinosaureSpriteA = new THREE.TextureLoader().load( "ressources\\sprites\\dinosaure_run_a.png" );
 				var dinosaureSpriteB = new THREE.TextureLoader().load( "ressources\\sprites\\dinosaure_run_b.png" );
+				var ground = new THREE.TextureLoader().load( "ressources\\sprites\\ground.png" );
 
-				var materialRunA = new THREE.SpriteMaterial( { map: dinosaureSpriteA } );
-				var materialRunB = new THREE.SpriteMaterial( { map: dinosaureSpriteB } );
+				//MATERIAL INIT
+				var materialDinosaureRunA = new THREE.SpriteMaterial( { map: dinosaureSpriteA } );
+				var materialDinosaureRunB = new THREE.SpriteMaterial( { map: dinosaureSpriteB } );
+				var materialground = new THREE.SpriteMaterial( { map: ground } );
+
+				//ANIMATION INIT
+				materialsRun = [materialDinosaureRunA, materialDinosaureRunB]; 
 				
-				materialsRun = [materialRunA, materialRunB]; 
-				var width = 128;
-				var height = 128;
-
-				dinosaure  = new THREE.Sprite( materialsRun[index] );
+				//DINOSAURE INIT
+				var dinosaureWidth = 64;
+				var dinosaureHeight = 64;
+				dinosaure = new THREE.Sprite( materialsRun[index] );
 				dinosaure.center.set( 0.0, 1.0 );
-				dinosaure.scale.set( width, height, 1 );
+				dinosaure.scale.set( dinosaureWidth, dinosaureHeight, 1 );
+				dinosaure.position.set( -(width/3), 0, 0 );
 				camera.add( dinosaure );
+				
+				//GROUND INIT
+				var groundWidth = 2400;
+				var groundHeight = 26;
+				ground = new THREE.Sprite( materialground );
+				ground.center.set( 0.0, 0.0 );
+				ground.scale.set( groundWidth, groundHeight, 1 );
+				ground.position.set(-(groundWidth / 2), -64, 0);
+				camera.add( ground );
 
-				// var plane = new THREE.PlaneBufferGeometry( 1, 1 );
-
+				scene.add( ground );
 				scene.add( dinosaure );
 				scene.add( camera );
 
-                //DINOSAURE INIT
+                
 				
                 //TO DO
 
-                //GROUND INIT
+                
                 
 
                 //Obstacle init
@@ -77,23 +91,8 @@
 			}
 
 			function animate() {
-				index ++;
-				var width = 128;
-				var height = 128;
-				//dinosaure.remove();
-				dinosaure = new THREE.Sprite(materialsRun[index]);
-				dinosaure.center.set( 0.0, 1.0 );
-				dinosaure.scale.set( width, height, 1 );
-				camera.add( dinosaure );
-				scene.add( dinosaure );
 				requestAnimationFrame( animate );
 				render();
-				
-				if(index == materialsRun.length){
-					index = 0;
-				}
-				//dinosaure.position.set(dinosaure.position.x + speed, 0, 0);
-
 			}
             
 			function render() {
