@@ -1,0 +1,107 @@
+<html lang="en">
+	<head>
+		<title>three.js webgl - cameras</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style></style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script>
+			var container, stats;
+			var camera, scene, renderer, mesh;
+			var ground;
+			var dinosaure;
+			var materialsRun;
+
+			var index = 0;
+			var speed = 0.1;
+			init();
+			animate();
+			function init() {
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+
+				//SCENE INIT
+				scene = new THREE.Scene();
+				scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
+				
+                //CAMERA INIT
+				camera = new THREE.OrthographicCamera( - width / 2, width / 2, height / 2, - height / 2, 1, 10 );
+				camera.position.z = 10;
+				
+                //RENDERER INIT
+                renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+                
+				//SPRITE INIT
+				var dinosaureSpriteA = new THREE.TextureLoader().load( "ressources\\sprites\\dinosaure_run_a.png" );
+				var dinosaureSpriteB = new THREE.TextureLoader().load( "ressources\\sprites\\dinosaure_run_b.png" );
+
+				var materialRunA = new THREE.SpriteMaterial( { map: dinosaureSpriteA } );
+				var materialRunB = new THREE.SpriteMaterial( { map: dinosaureSpriteB } );
+				
+				materialsRun = [materialRunA, materialRunB]; 
+				var width = 128;
+				var height = 128;
+
+				dinosaure  = new THREE.Sprite( materialsRun[index] );
+				dinosaure.center.set( 0.0, 1.0 );
+				dinosaure.scale.set( width, height, 1 );
+				camera.add( dinosaure );
+
+				// var plane = new THREE.PlaneBufferGeometry( 1, 1 );
+
+				scene.add( dinosaure );
+				scene.add( camera );
+
+                //DINOSAURE INIT
+				
+                //TO DO
+
+                //GROUND INIT
+                
+
+                //Obstacle init
+                //To do
+
+				//EVENT LIST INIT
+				document.addEventListener( 'keydown', onKeyDown, false );
+			}
+			//
+			function onKeyDown ( event ) {
+				switch( event.keyCode ) {
+					
+				}
+			}
+
+			function animate() {
+				index ++;
+				var width = 128;
+				var height = 128;
+				//dinosaure.remove();
+				dinosaure = new THREE.Sprite(materialsRun[index]);
+				dinosaure.center.set( 0.0, 1.0 );
+				dinosaure.scale.set( width, height, 1 );
+				camera.add( dinosaure );
+				scene.add( dinosaure );
+				requestAnimationFrame( animate );
+				render();
+				
+				if(index == materialsRun.length){
+					index = 0;
+				}
+				//dinosaure.position.set(dinosaure.position.x + speed, 0, 0);
+
+			}
+            
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	</body>
+</html>
