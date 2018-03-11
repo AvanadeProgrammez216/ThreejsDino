@@ -1,6 +1,6 @@
 <html lang="en">
 	<head>
-		<title>three.js webgl - cameras</title>
+		<title>Dinausore game</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style></style>
@@ -13,15 +13,19 @@
 			var ground;
 			var dinosaure;
 			var materialsRun;
+			var obstacle;
+			var obstacles = [];
 
+			var obstacleSpawnPoint;
 			var index = 0;
-			var speed = 0.1;
+			var speed = 1;
+
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+
 			init();
 			animate();
 			function init() {
-				var width = window.innerWidth;
-				var height = window.innerHeight;
-
 				//SCENE INIT
 				scene = new THREE.Scene();
 				scene.fog = new THREE.Fog( 0x000000, 1500, 2100 );
@@ -38,13 +42,15 @@
 				//TEXTURES INIT
 				var dinosaureSpriteA = new THREE.TextureLoader().load( "ressources\\sprites\\dinosaure_run_a.png" );
 				var dinosaureSpriteB = new THREE.TextureLoader().load( "ressources\\sprites\\dinosaure_run_b.png" );
-				var ground = new THREE.TextureLoader().load( "ressources\\sprites\\ground.png" );
+				var groundSprite = new THREE.TextureLoader().load( "ressources\\sprites\\ground.png" );
+				var obstacleSprite = new THREE.TextureLoader().load( "ressources\\sprites\\obstacle_a.png" );
 
 				//MATERIAL INIT
 				var materialDinosaureRunA = new THREE.SpriteMaterial( { map: dinosaureSpriteA } );
 				var materialDinosaureRunB = new THREE.SpriteMaterial( { map: dinosaureSpriteB } );
-				var materialground = new THREE.SpriteMaterial( { map: ground } );
-
+				var materialGround = new THREE.SpriteMaterial( { map: groundSprite } );
+				var materialObstacle = new THREE.SpriteMaterial( { map: obstacleSprite } );
+				
 				//ANIMATION INIT
 				materialsRun = [materialDinosaureRunA, materialDinosaureRunB]; 
 				
@@ -60,24 +66,31 @@
 				//GROUND INIT
 				var groundWidth = 2400;
 				var groundHeight = 26;
-				ground = new THREE.Sprite( materialground );
+				ground = new THREE.Sprite( materialGround );
 				ground.center.set( 0.0, 0.0 );
 				ground.scale.set( groundWidth, groundHeight, 1 );
 				ground.position.set(-(groundWidth / 2), -64, 0);
 				camera.add( ground );
 
+				obstacleSpawnPoint = new THREE.Vector3((width/3), 0, 0);
+
+				//OSTACLE INIT
+				var obstacleWith = 32;
+				var obstacleHeight = 64;
+				obstacle = new THREE.Sprite( materialObstacle );
+				obstacle.center.set( 0.0, 1.0 );
+				obstacle.scale.set( obstacleWith, obstacleHeight, 1 );
+				obstacle.position.set( (width/3), 15, 0 );
+				camera.add( obstacle );
+
+				obstacles.push(obstacle);
+				
+				//ADDING OBJECT ON SCENE
 				scene.add( ground );
 				scene.add( dinosaure );
 				scene.add( camera );
-
+				scene.add( obstacle );
                 
-				
-                //TO DO
-
-                
-                
-
-                //Obstacle init
                 //To do
 
 				//EVENT LIST INIT
@@ -92,6 +105,7 @@
 
 			function animate() {
 				requestAnimationFrame( animate );
+				obstacleManager();
 				render();
 			}
             
@@ -99,6 +113,27 @@
 
 				renderer.render( scene, camera );
 
+			}
+
+			function obstacleManager(){
+				
+				if(obstacles.length > 0){
+					for (i = 0; i < obstacles.length; i++) {
+						
+						var positionX = obstacles[0].position.x;
+						obstacles[0].position.set(positionX - speed, 0, 0); 
+
+						console.log(obstacles[i].position.x);
+
+						// When the obstacle is out of the screen
+						if(obstacles[i].position.x < -width){
+							scene.remove(obstacles[i]);
+							obstacles.splice(i, 1);
+							console.log("Obstacle destroy !");
+						}
+					} 
+				}
+				
 			}
 
 		</script>
